@@ -1,0 +1,75 @@
+.album-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.back-link {
+  display: inline-block;
+  color: #D4AF37;
+  text-decoration: none;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+  margin-bottom: 1rem;
+}
+
+.back-link:hover {
+  color: #b8962e;
+}
+
+.album-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2C2C2C;
+  margin: 0 0 0.3rem;
+  text-align: center;
+}
+
+.album-photo-count {
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  margin: 0 0 2rem;
+}
+
+.gallery-grid {
+  columns: 3;
+  column-gap: 1rem;
+}
+
+.gallery-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  border-radius: 3px;
+  overflow: hidden;
+  transition: opacity 0.2s;
+}
+
+.gallery-item:hover {
+  opacity: 0.88;
+}
+
+.gallery-item img {
+  width: 100%;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .gallery-grid {
+    columns: 2;
+  }
+}
+
+@media (max-width: 540px) {
+  .gallery-grid {
+    columns: 1;
+  }
+
+  .album-title {
+    font-size: 1.8rem;
+  }
+}

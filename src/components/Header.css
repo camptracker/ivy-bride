@@ -1,0 +1,30 @@
+.header {
+  text-align: center;
+  padding: 3rem 1rem 0;
+}
+
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #2C2C2C;
+  margin: 0;
+  letter-spacing: 0.08em;
+}
+
+.header-tagline {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #D4AF37;
+  margin: 0.5rem 0 0;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.header-divider {
+  width: 60px;
+  height: 1px;
+  background: #D4AF37;
+  margin: 1.5rem auto 0;
+}
