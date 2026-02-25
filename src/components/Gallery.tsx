@@ -108,6 +108,7 @@ export default function Gallery() {
 
   return (
     <div className="gallery">
+      <PricingSection data={ivyBridePricing} />
       <div className="filter-bar">
         <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All Photos</button>
         <button className={filter === 'favorites' ? 'active' : ''} onClick={() => setFilter('favorites')}>♥ Favorites ({favs.size})</button>
@@ -122,7 +123,6 @@ export default function Gallery() {
             }
           }}>{copied ? '✓ Copied!' : '🔗 Share Favorites'}</button>
         )}
-        <button className="pricing-scroll-btn" onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}>📋 Pricing</button>
         {albumNames.map(name => (
           <button key={name} className={filter === name ? 'active' : ''} onClick={() => setFilter(name)}>{name}</button>
         ))}
@@ -154,7 +154,6 @@ export default function Gallery() {
         />
       )}
 
-      <div id="pricing"><PricingSection data={ivyBridePricing} /></div>
     </div>
   );
 }

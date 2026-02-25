@@ -94,6 +94,7 @@ export default function RoyalGallery() {
 
   return (
     <div className="gallery">
+      <PricingSection data={royalMansionPricing} />
       <div className="filter-bar">
         <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All Photos</button>
         <button className={filter === 'favorites' ? 'active' : ''} onClick={() => setFilter('favorites')}>♥ Favorites ({favs.size})</button>
@@ -108,7 +109,6 @@ export default function RoyalGallery() {
             }
           }}>{copied ? '✓ Copied!' : '🔗 Share Favorites'}</button>
         )}
-        <button className="pricing-scroll-btn" onClick={() => document.getElementById('pricing-royal')?.scrollIntoView({ behavior: 'smooth' })}>📋 Pricing</button>
       </div>
 
       <div className="masonry">
@@ -137,7 +137,6 @@ export default function RoyalGallery() {
         />
       )}
 
-      <div id="pricing-royal"><PricingSection data={royalMansionPricing} /></div>
     </div>
   );
 }
