@@ -3,6 +3,14 @@ import { albums } from '../data/albums';
 import Lightbox from './Lightbox';
 import './Gallery.css';
 
+function encodeFavs(indices: number[]): string {
+  return btoa(JSON.stringify(indices));
+}
+
+function decodeFavs(hash: string): number[] {
+  try { return JSON.parse(atob(hash)); } catch { return []; }
+}
+
 interface PhotoItem {
   src: string;
   albumName: string;
@@ -14,6 +22,17 @@ const allPhotos: PhotoItem[] = albums.flatMap(a =>
 
 function useFavorites() {
   const [favs, setFavs] = useState<Set<string>>(() => {
+    // Check URL hash for shared favorites first
+    const hash = window.location.hash;
+    if (hash.startsWith('#favs=')) {
+      const indices = decodeFavs(hash.slice(6));
+      if (indices.length > 0) {
+        const shared = new Set(indices.filter(i => i < allPhotos.length).map(i => allPhotos[i].src));
+        // Save to localStorage too
+        localStorage.setItem('ivy-bride-favorites', JSON.stringify([...shared]));
+        return shared;
+      }
+    }
     try {
       const stored = localStorage.getItem('ivy-bride-favorites');
       return stored ? new Set(JSON.parse(stored)) : new Set();
@@ -29,7 +48,14 @@ function useFavorites() {
     });
   }, []);
 
-  return { favs, toggle };
+  const shareUrl = useCallback(() => {
+    const indices = allPhotos.map((p, i) => favs.has(p.src) ? i : -1).filter(i => i >= 0);
+    if (indices.length === 0) return null;
+    const base = window.location.origin + window.location.pathname;
+    return `${base}#favs=${encodeFavs(indices)}`;
+  }, [favs]);
+
+  return { favs, toggle, shareUrl };
 }
 
 function PhotoCard({ photo, isFav, onToggleFav, onClick }: {
@@ -66,9 +92,12 @@ function PhotoCard({ photo, isFav, onToggleFav, onClick }: {
 }
 
 export default function Gallery() {
-  const { favs, toggle } = useFavorites();
-  const [filter, setFilter] = useState<string>('all');
+  const { favs, toggle, shareUrl } = useFavorites();
+  const [filter, setFilter] = useState<string>(() => {
+    return window.location.hash.startsWith('#favs=') ? 'favorites' : 'all';
+  });
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const filtered = filter === 'all' ? allPhotos
     : filter === 'favorites' ? allPhotos.filter(p => favs.has(p.src))
@@ -80,7 +109,18 @@ export default function Gallery() {
     <div className="gallery">
       <div className="filter-bar">
         <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All Photos</button>
-        <button className={filter === 'favorites' ? 'active' : ''} onClick={() => setFilter('favorites')}>♥ Favorites</button>
+        <button className={filter === 'favorites' ? 'active' : ''} onClick={() => setFilter('favorites')}>♥ Favorites ({favs.size})</button>
+        {favs.size > 0 && (
+          <button className="share-btn" onClick={() => {
+            const url = shareUrl();
+            if (url) {
+              navigator.clipboard.writeText(url).then(() => {
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              });
+            }
+          }}>{copied ? '✓ Copied!' : '🔗 Share Favorites'}</button>
+        )}
         {albumNames.map(name => (
           <button key={name} className={filter === name ? 'active' : ''} onClick={() => setFilter(name)}>{name}</button>
         ))}

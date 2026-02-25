@@ -35,6 +35,16 @@
   border-color: #333;
 }
 
+.filter-bar .share-btn {
+  background: #e74c6f;
+  color: #fff;
+  border-color: #e74c6f;
+}
+
+.filter-bar .share-btn:hover {
+  background: #d63d5e;
+}
+
 /* Masonry */
 .masonry {
   column-count: 4;
