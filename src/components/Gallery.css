@@ -45,6 +45,16 @@
   background: #d63d5e;
 }
 
+.filter-bar .pricing-scroll-btn {
+  background: #4a90d9;
+  color: #fff;
+  border-color: #4a90d9;
+}
+
+.filter-bar .pricing-scroll-btn:hover {
+  background: #3a7bc8;
+}
+
 /* Masonry */
 .masonry {
   column-count: 4;

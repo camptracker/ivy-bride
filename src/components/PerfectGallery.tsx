@@ -108,6 +108,7 @@ export default function PerfectGallery() {
             }
           }}>{copied ? '✓ Copied!' : '🔗 Share Favorites'}</button>
         )}
+        <button className="pricing-scroll-btn" onClick={() => document.getElementById('pricing-perfect')?.scrollIntoView({ behavior: 'smooth' })}>📋 Pricing</button>
       </div>
 
       <div className="masonry">
@@ -136,7 +137,7 @@ export default function PerfectGallery() {
         />
       )}
 
-      <PricingSection data={perfectWeddingPricing} />
+      <div id="pricing-perfect"><PricingSection data={perfectWeddingPricing} /></div>
     </div>
   );
 }

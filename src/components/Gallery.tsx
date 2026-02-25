@@ -122,6 +122,7 @@ export default function Gallery() {
             }
           }}>{copied ? '✓ Copied!' : '🔗 Share Favorites'}</button>
         )}
+        <button className="pricing-scroll-btn" onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}>📋 Pricing</button>
         {albumNames.map(name => (
           <button key={name} className={filter === name ? 'active' : ''} onClick={() => setFilter(name)}>{name}</button>
         ))}
@@ -153,7 +154,7 @@ export default function Gallery() {
         />
       )}
 
-      <PricingSection data={ivyBridePricing} />
+      <div id="pricing"><PricingSection data={ivyBridePricing} /></div>
     </div>
   );
 }

@@ -108,6 +108,7 @@ export default function RoyalGallery() {
             }
           }}>{copied ? '✓ Copied!' : '🔗 Share Favorites'}</button>
         )}
+        <button className="pricing-scroll-btn" onClick={() => document.getElementById('pricing-royal')?.scrollIntoView({ behavior: 'smooth' })}>📋 Pricing</button>
       </div>
 
       <div className="masonry">
@@ -136,7 +137,7 @@ export default function RoyalGallery() {
         />
       )}
 
-      <PricingSection data={royalMansionPricing} />
+      <div id="pricing-royal"><PricingSection data={royalMansionPricing} /></div>
     </div>
   );
 }
