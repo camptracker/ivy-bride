@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { albums } from '../data/albums';
 import Lightbox from './Lightbox';
+import PricingSection, { ivyBridePricing } from './PricingSection';
 import './Gallery.css';
 
 function encodeFavs(indices: number[]): string {
@@ -151,6 +152,8 @@ export default function Gallery() {
           onNext={() => setLightboxIndex((lightboxIndex + 1) % filtered.length)}
         />
       )}
+
+      <PricingSection data={ivyBridePricing} />
     </div>
   );
 }

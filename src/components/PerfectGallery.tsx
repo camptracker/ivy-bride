@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { perfectPhotos } from '../data/perfectWedding';
 import Lightbox from './Lightbox';
+import PricingSection, { perfectWeddingPricing } from './PricingSection';
 import './Gallery.css';
 
 function encodeFavs(indices: number[]): string {
@@ -134,6 +135,8 @@ export default function PerfectGallery() {
           onNext={() => setLightboxIndex((lightboxIndex + 1) % filtered.length)}
         />
       )}
+
+      <PricingSection data={perfectWeddingPricing} />
     </div>
   );
 }
