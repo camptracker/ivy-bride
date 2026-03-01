@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import JSZip from 'jszip';
 import { albums } from '../data/albums';
 import Lightbox from './Lightbox';
 import PricingSection, { ivyBridePricing } from './PricingSection';
@@ -100,6 +101,36 @@ export default function Gallery() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
 
+  const [downloading, setDownloading] = useState(false);
+
+  const downloadAllFavs = useCallback(async () => {
+    const favPhotos = allPhotos.filter(p => favs.has(p.src));
+    if (favPhotos.length === 0) return;
+    setDownloading(true);
+    try {
+      const zip = new JSZip();
+      const counts: Record<string, number> = {};
+      await Promise.all(favPhotos.map(async (photo) => {
+        try {
+          const res = await fetch(photo.src);
+          const blob = await res.blob();
+          const album = photo.albumName.replace(/[^a-zA-Z0-9]/g, '_');
+          counts[album] = (counts[album] || 0) + 1;
+          const ext = photo.src.split('.').pop() || 'jpg';
+          zip.file(`${album}_${counts[album]}.${ext}`, blob);
+        } catch (e) { console.error('Failed to fetch', photo.src, e); }
+      }));
+      const content = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ivy-bride-favorites.zip';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) { console.error('Download failed', e); }
+    setDownloading(false);
+  }, [favs]);
+
   const filtered = filter === 'all' ? allPhotos
     : filter === 'favorites' ? allPhotos.filter(p => favs.has(p.src))
     : allPhotos.filter(p => p.albumName === filter);
@@ -113,15 +144,20 @@ export default function Gallery() {
         <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All Photos</button>
         <button className={filter === 'favorites' ? 'active' : ''} onClick={() => setFilter('favorites')}>♥ Favorites ({favs.size})</button>
         {favs.size > 0 && (
-          <button className="share-btn" onClick={() => {
-            const url = shareUrl();
-            if (url) {
-              navigator.clipboard.writeText(url).then(() => {
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              });
-            }
-          }}>{copied ? '✓ Copied!' : '🔗 Share Favorites'}</button>
+          <>
+            <button className="share-btn" onClick={() => {
+              const url = shareUrl();
+              if (url) {
+                navigator.clipboard.writeText(url).then(() => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                });
+              }
+            }}>{copied ? '✓ Copied!' : '🔗 Share Favorites'}</button>
+            <button className="share-btn download-btn" onClick={downloadAllFavs} disabled={downloading}>
+              {downloading ? '⏳ Zipping...' : `📥 Download All (${favs.size})`}
+            </button>
+          </>
         )}
         {albumNames.map(name => (
           <button key={name} className={filter === name ? 'active' : ''} onClick={() => setFilter(name)}>{name}</button>
